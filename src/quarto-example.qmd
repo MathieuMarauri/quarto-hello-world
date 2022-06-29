@@ -1,0 +1,147 @@
+---
+title: "Quarto example"
+author: 'Mathieu Marauri'
+format: 
+    html:
+        theme: cerulean
+        highlight: tango
+        toc: true
+        toc-depth: 3
+        toc-title: Contents
+        toc-location: left
+        fig-width: 8
+        fig-height: 6
+        css: ../utils/styles.css
+        self-contained: true
+output-file: ../output/quarto-example.html
+execute:
+    cache: true
+    echo: false
+---
+
+This document is an illustration of a [Quarto](https://quarto.org/) document. The installation is done from the [official website](https://quarto.org/docs/get-started/).
+
+# How to use
+
+2 main options are available: 
+
+1. Using VScode
+2. Using Jupyter Notebook
+
+## VScode
+
+You need to install the Quarto extension and to generate a new quarto document. Select the python interpreter to be the one from your virtual environment and you are good to go.
+
+## Jupyter
+
+Build your Jupyter Notebook as usual, simply add a YAML in the very first cell (a raw one). Call `quarto render` and you have an HTML or a PDF document. You an also call `quarto peview` to see live updates of the generated document as you make changes to your notebook.
+
+# Markdown
+
+The text content is written in Mardown so lists, links, _italic_, __bold__, ... are done the same way as usual. If the output is an html document you can embed html tags if needed. If a pdf is rendered, LaTex code is possible. In any case formulas can be writen in LaTex[^1].
+
+[^1]: It will be examplified in a dedicated section, see @sec-latex-formulas
+
+## Section titles
+
+You can number section with the option `number-sections: true` in the YAML. You can prevent one section to appear in the table of contents.
+
+### Skipped section {.unnumbered .unlisted}
+
+This section will not appear in the toc.
+
+## LaTex formulas {#sec-latex-formulas}
+
+$$
+X \sim \mathcal{N}(\mu,\,\sigma^{2})
+$$
+
+
+# Python code
+
+You can write python code within code chunks. The code will be executed and the output of the code, if any, will be display on the document. There are different [execution options](https://quarto.org/docs/computations/execution-options.html) available for code chunks.
+
+## Code without output
+
+The code specified in chunks can be shown in the output or kept hidden. The main chunk options to focus on are `echo` and `eval`.
+
+```{python setup}
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from IPython.display import display, Markdown
+```
+
+Here we load data from the `data` folder. It contains digits from the MNIST dataset.
+
+```{python data-loading}
+#| echo: true
+
+# Load the train dataset
+train = pd.read_csv('../data/train.csv')
+
+# Build X_train and a y_train objects
+X_train = train.drop(columns='label')
+y_train = train['label']
+
+# Reshape the data to an array of 28x28 images, dimensions expected by the model that will be built
+X_train = np.array(X_train).reshape(-1,28,28,1)
+```
+
+## Inline code
+
+The following is written using inline code.
+
+```{python data-shape}
+display(Markdown("""
+The shape of the train set is {shape}.
+""".format(shape = X_train.shape)))
+```
+
+## Figures
+
+You can use code chunks to produce plots and to display them.
+
+@fig-data-distrib displays the distribution of digits in the training set.
+```{python}
+#| label: fig-data-distrib
+#| fig-cap: "Distribution of digits in the training set"
+
+# Distribution of the digit in the train set
+labels, counts = np.unique(y_train, return_counts=True)
+plt.bar(labels, counts, align='center')
+plt.xticks(list(range(0, 10)))
+plt.xlabel('Digit')
+plt.ylabel('Number of occurences');
+```
+
+We can also display 2 plots side-by-side as in @fig-2plots, @fig-2plots-1 is the same plot as the previous one.
+
+```{python}
+#| label: fig-2plots
+#| fig-cap: Preview of the training data
+#| fig-subcap: ["Distribution of digits in the training set", "Example of digits"]
+#| layout: [[30,70]]
+#| layout-valign: bottom
+
+# Distribution of the digit in the train set
+labels, counts = np.unique(y_train, return_counts=True)
+plt.bar(labels, counts, align='center')
+plt.xticks(list(range(0, 10)))
+plt.xlabel('Digit')
+plt.ylabel('Number of occurences')
+
+# Glance at the data
+count = 0
+sample_size = 20
+plt.figure(figsize=(16, 6))
+for i in np.random.permutation(X_train.shape[0])[:sample_size]:
+    count = count + 1
+    plt.subplot(1, sample_size, count)
+    plt.axhline("")
+    plt.axvline("")
+    plt.text(x=10, y=-10, s=y_train[i], fontsize=18, color="b")
+    plt.imshow(X_train[i].reshape(28, 28), cmap=plt.cm.Greys)
+plt.show()
+```
+

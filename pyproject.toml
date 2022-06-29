@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "quarto"
+version = "0.1.0"
+description = ""
+authors = ["Mathieu Marauri <mathieu.marauri@mfglabs.com>"]
+
+[tool.poetry.dependencies]
+python = "3.9.7"
+pandas = "^1.4.2"
+matplotlib = "^3.5.2"
+ipykernel = "^6.13.0"
+jupyter = "^1.0.0"
+jupyter-cache = "^0.5.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
