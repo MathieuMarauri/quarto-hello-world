@@ -1,0 +1,32 @@
+project:
+  type: book
+  output-dir: book-rendered
+
+book:
+  title: "Create a book with Quarto"
+  author: "Mathieu Marauri"
+  date: "12/7/2022"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - summary.qmd
+    - hello-world-jupyter.ipynb
+    - hello-world.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cerulean
+    highlight: tango
+    toc: true
+    toc-depth: 3
+    toc-title: Contents
+    toc-location: left
+    fig-width: 8
+    fig-height: 6
+    self-contained: true
+    css: ../utils/styles.css
+  pdf:
+    documentclass: scrreprt
